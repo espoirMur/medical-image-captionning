@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "csse group project"
+version = "0.1.0"
+description = ""
+authors = ["espoir murhabazi <espoir.mur@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "3.8.5"
+torch = "1.11.0"
+torchvision = "0.12"
+pandas = "^1.4.1"
+matplotlib = "^3.5.1"
+ipykernel = "^6.9.1"
+dvc = "^2.9.5"
+seaborn = "^0.11.2"
+spacy = "^3.2.3"
+gensim = "^4.1.2"
+torchtext = "0.12.0"
+nltk = "^3.7"
+mlflow = "^1.24.0"
+dagshub = "^0.1.8"
+
+[tool.poetry.dev-dependencies]
+pycodestyle = "^2.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
