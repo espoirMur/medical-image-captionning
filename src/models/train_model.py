@@ -45,9 +45,9 @@ cudnn.benchmark = True  # set to true only if inputs to model are fixed size; ot
 
 # Training parameters
 start_epoch = 0
-epochs = 20  # number of epochs to train for (if early stopping is not triggered)
+epochs = 30  # number of epochs to train for (if early stopping is not triggered)
 epochs_since_improvement = 0  # keeps track of number of epochs since there's been an improvement in validation BLEU
-batch_size = 5
+batch_size = 64
 encoder_lr = 1e-4  # learning rate for encoder if fine-tuning
 decoder_lr = 4e-3  # learning rate for decoder
 grad_clip = 5.  # clip gradients at an absolute value of
@@ -55,7 +55,7 @@ alpha_c = 1.  # regularization parameter for 'doubly stochastic attention', as i
 best_bleu4 = 0.  # BLEU-4 score right now
 print_freq = 100  # print training/validation stats every __ batches
 fine_tune_encoder = False  # fine-tune encoder?
-checkpoint = True  # path to checkpoint, None if none
+checkpoint = Path.cwd().joinpath("BEST_checkpoint_images-captioning.pth.tar")  # path to checkpoint, None if none
 tokenizer = get_tokenizer('basic_english')
 
 corpus = pd.read_csv(caption_prediction_path.joinpath("corpus.csv"), sep="\t").loc[:, "caption"].values
@@ -106,7 +106,7 @@ def main():
                                ToTensor())
 
     # Initialize / load checkpoint
-    if checkpoint:# is None:
+    if checkpoint is None:
         encoder = EncoderCNN(embedding_size=embedding_size)
         decoder = DecoderRNN(embed_size=embedding_size,
                              hidden_size=hidden_size,
@@ -144,7 +144,7 @@ def main():
                                            text_tokenizer=tokenizer,
                                            text_transform=text_tranform)
     validation_dataset = ImageCaptionDataset(caption_path=caption_prediction_path.joinpath("validation-captions.csv"),
-                                             images_dir=data_path.joinpath("validation-images"),
+                                             images_dir=data_path.joinpath("validation-images", "valid"),
                                              sequence_length=200,
                                              text_tokenizer=tokenizer,
                                              text_transform=text_tranform)
@@ -161,7 +161,7 @@ def main():
         # Decay learning rate if there is no improvement for 8 consecutive epochs, and terminate training after 20
         if epochs_since_improvement == 20:
             break
-        if epochs_since_improvement > 0 and epochs_since_improvement % 8 == 0:
+        if epochs_since_improvement > 0 and epochs_since_improvement % 4 == 0:
             adjust_learning_rate(decoder_optimizer, 0.8)
             if fine_tune_encoder:
                 adjust_learning_rate(encoder_optimizer, 0.8)
@@ -224,6 +224,8 @@ def train(train_loader, encoder, decoder, criterion, encoder_optimizer, decoder_
 
             data_time.update(time.time() - start)
 
+            # this part can be a function because it is repeated
+
             # Move to GPU, if available
             images = images.to(device)
             captions = captions.to(device)
@@ -231,7 +233,7 @@ def train(train_loader, encoder, decoder, criterion, encoder_optimizer, decoder_
             
             features = features.expand(decoder_layers, features.shape[0], features.shape[1]) # (number of layer X batch size X hidden size)
             # Set the initial hidden state of the decoder to be the output of the encoder
-            decoder_hidden = (features, features)
+            decoder_hidden = (features.contiguous(), features.contiguous())
             outputs = decoder(captions, decoder_hidden)
             # Calculate loss
             loss = criterion(outputs, captions)
@@ -272,7 +274,7 @@ def train(train_loader, encoder, decoder, criterion, encoder_optimizer, decoder_
                                                                       batch_time=batch_time,
                                                                       data_time=data_time, loss=losses))
             step = epoch * len(train_loader) + i
-            log_scalar('train_loss', loss.data.item(), step)
+            log_scalar('train_loss', losses.avg, step)
 
 
 def validate(val_loader, encoder, decoder, criterion, epoch):
@@ -292,7 +294,6 @@ def validate(val_loader, encoder, decoder, criterion, epoch):
 
         batch_time = AverageMeter()
         losses = AverageMeter()
-        top5accs = AverageMeter()
 
         start = time.time()
 
@@ -315,11 +316,10 @@ def validate(val_loader, encoder, decoder, criterion, epoch):
                 images = images.to(device)
                 captions = captions.to(device)
                 features = encoder(images)  # batch size x hidden size or (512)
-                print(lengths, "the lenths of each text")
 
                 features = features.expand(decoder_layers, features.shape[0], features.shape[1]) # (number of layer X batch size X hidden size)
                 # Set the initial hidden state of the decoder to be the output of the encoder
-                decoder_hidden = (features, features)
+                decoder_hidden = (features.contiguous(), features.contiguous())
                 outputs = decoder(captions, decoder_hidden)
                 # Calculate loss
                 loss = criterion(outputs, captions)
@@ -348,15 +348,15 @@ def validate(val_loader, encoder, decoder, criterion, epoch):
                         print("original caption: {}".format(original))
                         print(20 * "=|=")
                         print("predicted caption: {}".format(predicted))
+                        print(20 * "-----")
 
                 assert len(original_texts) == len(predicted_texts)
             bleu4 = corpus_bleu(original_texts, predicted_texts,)
             print('\n * LOSS - {loss.avg:.3f},, BLEU-4 - {bleu}\n'.format(loss=losses, bleu=bleu4))
         step = (epoch + 1) * len(val_loader)
-        log_scalar('test_loss', losses.val, step)
+        log_scalar('test_loss', losses.avg, step)
         return bleu4
 
 
 if __name__ == '__main__':
-    mlflow.set_tracking_uri("https://dagshub.com/espoirMur/21-22_CE9x3_team12.mlflow")
     main()
