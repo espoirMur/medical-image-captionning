@@ -154,3 +154,4 @@ cython_debug/
 #.idea/
 BEST_checkpoint_images-captioning.pth.tar
 checkpoint_images-captioning.pth.tar
+mlruns/

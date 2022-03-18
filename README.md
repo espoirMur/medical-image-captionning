@@ -27,7 +27,7 @@ The decoder is a 8 layers LSTM that takes the images representation and the and 
 
 We trained the model using 30 epoch, and using the cross entropy loss .
 
-The result yield a bleu score of 0.2.  on our validation set.
+The result yield a bleu score of 0.2. on our validation set.
 
 ### Instructions to reproduce the results
 
