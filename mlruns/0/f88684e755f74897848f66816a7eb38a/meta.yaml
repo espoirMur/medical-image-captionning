@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/es.py/Projects/Personal/School-Stuff/Group-Project/team-project-repo/mlruns/0/f88684e755f74897848f66816a7eb38a/artifacts
+end_time: 1647445694800
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: f88684e755f74897848f66816a7eb38a
+run_uuid: f88684e755f74897848f66816a7eb38a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1647445689464
+status: 3
+tags: []
+user_id: es.py

@@ -55,7 +55,7 @@ alpha_c = 1.  # regularization parameter for 'doubly stochastic attention', as i
 best_bleu4 = 0.  # BLEU-4 score right now
 print_freq = 100  # print training/validation stats every __ batches
 fine_tune_encoder = False  # fine-tune encoder?
-checkpoint = True  # path to checkpoint, None if none
+checkpoint = None  # path to checkpoint, None if none
 tokenizer = get_tokenizer('basic_english')
 
 corpus = pd.read_csv(caption_prediction_path.joinpath("corpus.csv"), sep="\t").loc[:, "caption"].values
@@ -106,7 +106,7 @@ def main():
                                ToTensor())
 
     # Initialize / load checkpoint
-    if checkpoint:# is None:
+    if checkpoint is None:
         encoder = EncoderCNN(embedding_size=embedding_size)
         decoder = DecoderRNN(embed_size=embedding_size,
                              hidden_size=hidden_size,
