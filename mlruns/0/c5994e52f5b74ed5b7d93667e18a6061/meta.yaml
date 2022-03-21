@@ -1,0 +1,15 @@
+artifact_uri: file:///home/es.py/school_stuff/image-captionning-project/mlruns/0/c5994e52f5b74ed5b7d93667e18a6061/artifacts
+end_time: 1647527471710
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: c5994e52f5b74ed5b7d93667e18a6061
+run_uuid: c5994e52f5b74ed5b7d93667e18a6061
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1647527315919
+status: 3
+tags: []
+user_id: es.py
