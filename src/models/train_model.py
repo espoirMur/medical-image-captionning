@@ -55,7 +55,7 @@ alpha_c = 1.  # regularization parameter for 'doubly stochastic attention', as i
 best_bleu4 = 0.  # BLEU-4 score right now
 print_freq = 100  # print training/validation stats every __ batches
 fine_tune_encoder = False  # fine-tune encoder?
-checkpoint = Path.cwd().joinpath("BEST_checkpoint_images-captioning.pth.tar")  # path to checkpoint, None if none
+checkpoint = None  # path to checkpoint, None if none
 tokenizer = get_tokenizer('basic_english')
 
 corpus = pd.read_csv(caption_prediction_path.joinpath("corpus.csv"), sep="\t").loc[:, "caption"].values
