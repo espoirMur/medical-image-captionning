@@ -29,6 +29,8 @@ We trained the model using 30 epoch, and using the cross entropy loss .
 
 The result yield a bleu score of 0.2. on our validation set.
 
+We did not train the encoder cnn, but we trained only the decoder LSTM.
+
 ### Instructions to reproduce the results
 
 
