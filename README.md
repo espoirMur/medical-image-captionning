@@ -103,7 +103,7 @@ Please let us know , if you have any other questions or suggestions.
 
 ### References: 
 
-90 % of the code was copied from the internet. Here are the majors references : 
+Here are the majors references : 
 
 - [Image Pytorch ](https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Image-Captioning)
 - [ Image captioning Udacity Challenge](https://github.com/rammyram/image_captioning)
