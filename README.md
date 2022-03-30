@@ -96,6 +96,12 @@ If everything is okay for you then run the following command:
 
 
 
+#### Visualize the results
+
+To visualize the results of the training of the model, please refer to the following notebook:
+
+`predict-playground.ipynb`
+
 ### Did I miss something?: 
 
 Please let us know , if you have any other questions or suggestions.
