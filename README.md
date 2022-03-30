@@ -100,7 +100,7 @@ If everything is okay for you then run the following command:
 
 To visualize the results of the training of the model, please refer to the following notebook:
 
-`predict-playground.ipynb`
+[playground-file](./predict-playground.ipynb)
 
 ### Did I miss something?: 
 
